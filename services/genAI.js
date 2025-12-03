@@ -1,14 +1,27 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({apiKey: process.env.apiKey});
+class GenAIService {
+    constructor() {
+        this.ai = new GoogleGenAI({ apiKey: process.env.apiKey });
+    }
 
-async function generate() {
-    const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: "Hello",
-    });
-    console.log(response.text);
+    async generate(prompt, model) {
+        try {
+            
+            const response = await this.ai.models.generateContent({
+                model: model,
+                contents: prompt,
+            });
+
+            console.log(response.text);
+            
+            return response.text;
+        } catch (error) {
+            
+            throw new Error(`GenAI Service Error: ${error.message}`);
+            
+        }
+    }
 }
 
-
-generate();
+export default GenAIService ;
